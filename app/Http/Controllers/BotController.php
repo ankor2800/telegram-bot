@@ -23,6 +23,19 @@ class BotController extends Controller
     }
 
     /**
+     * Получение обновлений чата
+     * GET /bot/updates
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUpdates()
+    {
+        $telegram = new \App\Service\Telegram();
+        $res = $telegram->getUpdates();
+
+        return response()->json($res, 200);
+    }
+
+    /**
      * Создание изображения с наложением текста
      * отправка его сообщением в telegram
      * PUT /bot/send/image?text=

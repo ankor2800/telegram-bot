@@ -16,5 +16,6 @@ $app->get('/', function () use ($app) {
 });
 
 $app->get('/bot/check/', 'BotController@check');
+$app->get('/bot/updates/', 'BotController@getUpdates');
 $app->put('/bot/send/image/', 'BotController@sendImage');
 $app->put('/bot/send/message/', 'BotController@sendMessage');
