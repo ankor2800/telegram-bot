@@ -11,6 +11,8 @@ class Image
 
     /** @var ImageManager */
     protected $manager;
+    /** @var \Intervention\Image\Image */
+    protected $image;
     /** @var string текст для изображения  */
     protected $text;
     /** @var integer количество строк текста */
@@ -42,11 +44,11 @@ class Image
 
     /**
      * Метод формирования изображения для отправки
-     * @return \Illuminate\Support\Collection
+     * @return $this
      */
     public function createImage()
     {
-        $image = $this->manager->make(env('IMG_DEBUG'));
+        $image = $this->makeImage();
 
         $this->breakString($image->getWidth() - $this->settings['padding'] * 2);
 
@@ -65,14 +67,38 @@ class Image
 
         $image->insert($textLayer)->save($this->getSavePath());
 
-        $result = collect([
-            'base' => realpath($image->basePath()),
-            'mime' => mime_content_type($image->basePath()),
-            'name' => $image->basename,
-            'size' => $image->filesize()
-        ]);
+        $this->setImage($image);
 
-        return $result;
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return collect([
+            'base' => realpath($this->image->basePath()),
+            'mime' => mime_content_type($this->image->basePath()),
+            'name' => $this->image->basename,
+            'size' => $this->image->filesize()
+        ]);
+    }
+
+    /**
+     * @param \Intervention\Image\Image $image
+     * @return $this
+     */
+    protected function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * Метод создания объекта из исходного изображения
+     * @return \Intervention\Image\Image
+     */
+    protected function makeImage()
+    {
+        return $this->manager->make(env('IMG_DEBUG'));
     }
 
     /**
