@@ -30,7 +30,7 @@ T_CHAT_ID // chat id куда отправлять сообщения
 ```
 ## Controllers
 
-###/bot/check/
+### /bot/check/
 #### GET
 ##### Description:
 
@@ -42,7 +42,7 @@ T_CHAT_ID // chat id куда отправлять сообщения
 | ---- | ----------- | ------ |
 | 200 | Ответ от API Telegram | https://tlgrm.ru/docs/bots/api#getme |
 
-###/bot/updates/
+### /bot/updates/
 #### GET
 ##### Description:
 
