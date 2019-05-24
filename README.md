@@ -27,6 +27,8 @@ TEXT_PADDING // отступы текста от краев изображени
 // настройки бота
 T_BOT_TOKEN // токен к api telegram бота
 T_CHAT_ID // chat id куда отправлять сообщения
+USE_SOCKS5_PROXY // true|false используем прокси в запросах к API telegram
+SOCKS5_PROXY // socks5 proxy
 ```
 ## Controllers
 
