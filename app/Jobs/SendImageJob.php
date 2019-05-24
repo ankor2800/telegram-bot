@@ -11,15 +11,18 @@ class SendImageJob extends Job
     protected $image;
     /** @var Telegram */
     protected $telegram;
+    /** @var null|string */
+    protected $text;
 
     /**
      * SendMessageJob constructor.
-     * @param string $text text for image
+     * @param null|string $text текст накладываемый на изображение
      */
     public function __construct($text)
     {
-        $this->image = new Image($text);
+        $this->image = new Image();
         $this->telegram = new Telegram();
+        $this->text = $text;
     }
 
     /**
@@ -30,7 +33,11 @@ class SendImageJob extends Job
      */
     public function handle()
     {
-        $image = $this->image->createImage();
+        if ($this->text) {
+            $this->image->setText($this->text);
+        }
+
+        $image = $this->image->createImage()->getImage();
         $this->telegram->sendPhoto($image);
     }
 }
