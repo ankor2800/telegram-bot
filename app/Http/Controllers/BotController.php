@@ -45,7 +45,7 @@ class BotController extends Controller
     public function sendImage(Request $request)
     {
         dispatch(
-            new SendImageJob($request->text)
+            new SendImageJob($request->get('text'))
         );
 
        return response()->json(true, 200);
@@ -60,8 +60,12 @@ class BotController extends Controller
      */
     public function sendMessage(Request $request)
     {
+        $this->validate($request, [
+            'text' => 'required'
+        ]);
+
         dispatch(
-            new SendMessageJob($request->text)
+            new SendMessageJob($request->get('text'))
         );
 
         return response()->json(true, 200);

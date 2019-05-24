@@ -13,22 +13,20 @@ class Image
     protected $manager;
     /** @var \Intervention\Image\Image */
     protected $image;
-    /** @var string текст для изображения  */
+    /** @var string текст для изображения */
     protected $text;
-    /** @var integer количество строк текста */
-    protected $count;
+    /** @var int количество строк текста */
+    protected $lines;
     /** @var array image config */
     protected $settings;
 
     /**
      * Image constructor.
-     * @param string $text текст для изображения
      */
-    public function __construct($text)
+    public function __construct()
     {
         $this->settings = config('image');
         $this->manager = new ImageManager();
-        $this->text = $text;
     }
 
     /**
@@ -43,35 +41,9 @@ class Image
     }
 
     /**
-     * Метод формирования изображения для отправки
-     * @return $this
+     * Возвращает коллекцию данных об изображении
+     * @return \Illuminate\Support\Collection
      */
-    public function createImage()
-    {
-        $image = $this->makeImage();
-
-        $this->breakString($image->getWidth() - $this->settings['padding'] * 2);
-
-        $textLayer = $this->manager
-            ->canvas(
-                $image->getWidth(),
-                $this->getCanvasHeight(),
-                $this->settings['bg_color']
-            )
-            ->text($this->text, $this->settings['padding'], $this->settings['padding'], function(Font $font) {
-                $font->file(base_path($this->settings['font']));
-                $font->size($this->settings['font_size']);
-                $font->color($this->settings['font_color']);
-                $font->valign('top');
-           });
-
-        $image->insert($textLayer)->save($this->getSavePath());
-
-        $this->setImage($image);
-
-        return $this;
-    }
-
     public function getImage()
     {
         return collect([
@@ -93,11 +65,84 @@ class Image
     }
 
     /**
+     * @return string текст накладываемый на изображение
+     */
+    protected function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * Изменение текста накладываемого на изображение
+     * @param string $text
+     * @return $this
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+        return $this;
+    }
+
+    /**
+     * Изменение количества строк текста
+     * @param $lines
+     * @return $this
+     */
+    protected function setLines($lines)
+    {
+        $this->lines = $lines;
+        return $this;
+    }
+
+    /**
+     * @return int количество строк текста
+     */
+    protected function getLines()
+    {
+        return $this->lines;
+    }
+
+    /**
+     * Метод формирования изображения для отправки
+     * @return $this
+     */
+    public function createImage()
+    {
+        $image = $this->makeImage();
+
+        if ($this->getText()) {
+            $this->breakString($image->getWidth() - $this->settings['padding'] * 2);
+
+            $textLayer = $this->manager
+                ->canvas(
+                    $image->getWidth(),
+                    $this->getCanvasHeight(),
+                    $this->settings['bg_color']
+                )
+                ->text($this->getText(), $this->settings['padding'], $this->settings['padding'], function(Font $font) {
+                    $font->file(base_path($this->settings['font']));
+                    $font->size($this->settings['font_size']);
+                    $font->color($this->settings['font_color']);
+                    $font->valign('top');
+                });
+
+            $image->insert($textLayer);
+        }
+
+        $image->save($this->getSavePath());
+
+        $this->setImage($image);
+
+        return $this;
+    }
+
+    /**
      * Метод создания объекта из исходного изображения
      * @return \Intervention\Image\Image
      */
     protected function makeImage()
     {
+        // TODO: получение актуального изображения
         return $this->manager->make(env('IMG_DEBUG'));
     }
 
@@ -107,17 +152,18 @@ class Image
      */
     private function breakString($width)
     {
-        $textWidth = $this->getBoxWidth($this->text);
+        $text = $this->getText();
+
+        $textWidth = $this->calculateBoxWidth($text);
         $lines = [];
 
-
         if ($textWidth > $width) {
-            $words = explode(' ', $this->text);
+            $words = explode(' ', $text);
 
             $line = [];
 
             foreach ($words as $word) {
-                $lineWidth = $this->getBoxWidth(implode(' ', $line).' '.$word);
+                $lineWidth = $this->calculateBoxWidth(implode(' ', $line).' '.$word);
 
                 if ($lineWidth > $width) {
                     $lines[] = implode(' ', $line);
@@ -129,8 +175,13 @@ class Image
             $lines[] = implode(' ', $line);
         }
 
-        $this->text  = $lines ? implode("\n", $lines) : $this->text;
-        $this->count = $lines ? count($lines) : 1;
+        $this->setText(
+            $lines ? implode("\n", $lines) : $text
+        );
+
+        $this->setLines(
+            $lines ? count($lines) : 1
+        );
     }
 
     /**
@@ -139,15 +190,15 @@ class Image
      */
     private function getCanvasHeight()
     {
-        return self::LINE_HEIGHT * $this->settings['font_size'] * $this->count + $this->settings['padding'];
+        return self::LINE_HEIGHT * $this->settings['font_size'] * $this->getLines() + $this->settings['padding'];
     }
 
     /**
      * Метод расчета ширины блока под строку текста
      * @param string $text строка текста для расчета
-     * @return float|int ширина блока
+     * @return int ширина блока
      */
-    private function getBoxWidth($text)
+    private function calculateBoxWidth($text)
     {
         $box = imagettfbbox(
             0.75 * $this->settings['font_size'],
