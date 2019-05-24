@@ -55,6 +55,7 @@ class Image
     }
 
     /**
+     * Изменение изображения
      * @param \Intervention\Image\Image $image
      * @return $this
      */
@@ -85,7 +86,7 @@ class Image
 
     /**
      * Изменение количества строк текста
-     * @param $lines
+     * @param int $lines
      * @return $this
      */
     protected function setLines($lines)
