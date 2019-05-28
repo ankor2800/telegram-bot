@@ -1,7 +1,6 @@
 <?php
 namespace App\Service\Providers;
 
-
 class Telegram
 {
     /** @var array telegram config */
@@ -10,7 +9,7 @@ class Telegram
     /** @var array массив типов HTTP-заголовков */
     const HTTPHEADER = [
         'form-data' => 'Content-Type: multipart/form-data',
-        'json' => 'Content-Type: application/json'
+        'json'      => 'Content-Type: application/json',
     ];
 
     public function __construct()
@@ -37,7 +36,7 @@ class Telegram
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         if ($fileSize) {
-            curl_setopt($curl, CURLOPT_INFILESIZE , $fileSize);
+            curl_setopt($curl, CURLOPT_INFILESIZE, $fileSize);
         }
 
         if ($this->settings['use_proxy']) {

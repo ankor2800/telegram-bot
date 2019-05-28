@@ -26,7 +26,7 @@ class Image
     public function __construct()
     {
         $this->settings = config('image');
-        $this->manager = new ImageManager();
+        $this->manager  = new ImageManager();
     }
 
     /**
@@ -50,7 +50,7 @@ class Image
             'base' => realpath($this->image->basePath()),
             'mime' => mime_content_type($this->image->basePath()),
             'name' => $this->image->basename,
-            'size' => $this->image->filesize()
+            'size' => $this->image->filesize(),
         ]);
     }
 
@@ -120,7 +120,7 @@ class Image
                     $this->getCanvasHeight(),
                     $this->settings['bg_color']
                 )
-                ->text($this->getText(), $this->settings['padding'], $this->settings['padding'], function(Font $font) {
+                ->text($this->getText(), $this->settings['padding'], $this->settings['padding'], function (Font $font) {
                     $font->file(base_path($this->settings['font']));
                     $font->size($this->settings['font_size']);
                     $font->color($this->settings['font_color']);
@@ -156,7 +156,7 @@ class Image
         $text = $this->getText();
 
         $textWidth = $this->calculateBoxWidth($text);
-        $lines = [];
+        $lines     = [];
 
         if ($textWidth > $width) {
             $words = explode(' ', $text);
@@ -168,7 +168,7 @@ class Image
 
                 if ($lineWidth > $width) {
                     $lines[] = implode(' ', $line);
-                    $line = [];
+                    $line    = [];
                 }
 
                 $line[] = $word;

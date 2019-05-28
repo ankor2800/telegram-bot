@@ -30,7 +30,9 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ]
+        ],
+        "lint": "phpcs",
+        "fix": "phpcbf"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
