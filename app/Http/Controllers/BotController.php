@@ -17,7 +17,7 @@ class BotController extends Controller
     public function check()
     {
         $telegram = new \App\Service\Telegram();
-        $res = $telegram->getMe();
+        $res      = $telegram->getMe();
 
         return response()->json($res, 200);
     }
@@ -30,7 +30,7 @@ class BotController extends Controller
     public function getUpdates()
     {
         $telegram = new \App\Service\Telegram();
-        $res = $telegram->getUpdates();
+        $res      = $telegram->getUpdates();
 
         return response()->json($res, 200);
     }
@@ -48,7 +48,7 @@ class BotController extends Controller
             new SendImageJob($request->get('text'))
         );
 
-       return response()->json(true, 200);
+        return response()->json(true, 200);
     }
 
     /**
@@ -60,9 +60,7 @@ class BotController extends Controller
      */
     public function sendMessage(Request $request)
     {
-        $this->validate($request, [
-            'text' => 'required'
-        ]);
+        $this->validate($request, ['text' => 'required',]);
 
         dispatch(
             new SendMessageJob($request->get('text'))

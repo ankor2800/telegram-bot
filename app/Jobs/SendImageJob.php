@@ -20,9 +20,9 @@ class SendImageJob extends Job
      */
     public function __construct($text)
     {
-        $this->image = new Image();
+        $this->image    = new Image();
         $this->telegram = new Telegram();
-        $this->text = $text;
+        $this->text     = $text;
     }
 
     /**

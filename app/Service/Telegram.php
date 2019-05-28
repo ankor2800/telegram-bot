@@ -72,7 +72,7 @@ class Telegram
             'form-data',
             [
                 'chat_id' => $this->settings['chat_id'],
-                'photo' => new \CURLFile($image->get('base'), $image->get('mime'), $image->get('name'))
+                'photo'   => new \CURLFile($image->get('base'), $image->get('mime'), $image->get('name')),
             ],
             $image->get('size')
         );

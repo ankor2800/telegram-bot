@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ruleset name="PHP_CodeSniffer">
+    <description>The coding standard for PHP_CodeSniffer itself.</description>
+
+    <file>app</file>
+    <file>config</file>
+    <file>routes</file>
+    <file>tests</file>
+
+    <exclude-pattern>database/*</exclude-pattern>
+    <exclude-pattern>storage/*</exclude-pattern>
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <arg name="basepath" value="."/>
+    <arg name="colors" />
+    <arg value="np"/>
+
+    <!-- Don't hide tokenizer exceptions -->
+    <rule ref="Internal.Tokenizer.Exception">
+        <type>error</type>
+    </rule>
+
+    <rule ref="PSR1" />
+    <rule ref="PSR2" />
+
+    <!-- Include some sniffs from other standards that don't conflict with PEAR -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.NamingConventions.ConstructorName"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.LowerCaseKeyword"/>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+    <rule ref="Zend.Files.ClosingTag"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.DoubleArrowNotAligned"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.NoComma"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.NoCommaAfterLast"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.NoSpaceAfterComma"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.MultiLineNotAllowed"/>
+
+    <!-- Have 12 chars padding maximum and always show as errors -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="maxPadding" value="12"/>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Private methods MUST not be prefixed with an underscore -->
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <type>error</type>
+    </rule>
+
+    <!-- Private properties MUST not be prefixed with an underscore -->
+    <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
+        <type>error</type>
+    </rule>
+</ruleset>

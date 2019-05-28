@@ -17,7 +17,7 @@ class SendMessageJob extends Job
      */
     public function __construct($text)
     {
-        $this->text = $text;
+        $this->text     = $text;
         $this->telegram = new Telegram();
     }
 
